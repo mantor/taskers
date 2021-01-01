@@ -1,0 +1,6 @@
+
+# gitreader tasker
+
+require: 'tasker.rb'
+class: GitReaderTasker
+
