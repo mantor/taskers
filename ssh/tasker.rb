@@ -3,13 +3,7 @@ class SshTasker < Flor::BasicTasker
 
   def task
 
-    if payload['target'].nil?
-
-      hosts = payload['scoped']
-    else
-
-      hosts = payload['scoped'].select{|k,v| v['tags'].include?(payload['target']) }
-    end
+    hosts = attd['hosts'].split
 
     # # TODO default user and key and port should be manipulable via web &&|| extracted to a config
     user = attd['user'].nil? ? 'mantor' : attd['user']
@@ -25,7 +19,7 @@ class SshTasker < Flor::BasicTasker
     hosts.each do |h|
 
       begin
-        Net::SSH.start(h[1]['name'], user, options) do |ssh|
+        Net::SSH.start(h, user, options) do |ssh|
           ssh.open_channel do |channel|
             channel.exec(command) do |ch, success|
               abort "could not execute command" unless success # TODO trigger cancel or retry
